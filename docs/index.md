@@ -1,18 +1,28 @@
-# Web Mining and Applied NLP
+# nlp-05: Web Documents and HTML Data
 
-This site provides documentation for this project.
-Use the navigation to explore module-specific materials.
+Documentation for the Module 5 EVTL pipeline project by Venkat Teja.
 
-## How-To Guide
+## Project Summary
 
-Many instructions are common to all our projects.
+This project applies a structured EVTL pipeline to an arXiv abstract page,
+extracting and transforming HTML data into a clean, structured CSV.
 
-See
-[⭐ **Workflow: Apply Example**](https://denisecase.github.io/pro-analytics-02/workflow-b-apply-example-project/)
-to get these projects running on your machine.
+**Paper:** [Disentangling cosmic distance tensions with early and late dark energy](https://arxiv.org/abs/2604.08530)
+**Subject:** Astrophysics > Cosmology and Nongalactic Astrophysics
+**arXiv ID:** 2604.08530
 
-## Project Documentation Pages (docs/)
+## Pipeline Overview
 
-- **Home** - this documentation landing page
-- **Project Instructions** - instructions specific to this module
-- **Glossary** - project terms and concepts
+| Stage | Description |
+|---|---|
+| **Extract** | Fetch HTML from the arXiv abstract page |
+| **Validate** | Confirm expected tags (title, authors, abstract, subjects, dateline) are present |
+| **Transform** | Parse fields with BeautifulSoup and compute derived metrics |
+| **Load** | Write structured output to `data/processed/teja_processed.csv` |
+
+## Output Fields
+
+13 columns extracted and computed per paper:
+`arxiv_id`, `title`, `authors`, `subjects`, `primary_subject_code`,
+`submitted`, `version_count`, `pdf_url`, `abstract`,
+`abstract_word_count`, `sentence_count`, `avg_word_length`, `author_count`

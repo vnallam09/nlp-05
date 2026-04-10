@@ -221,6 +221,42 @@ def run_transform(
     LOG.info(f"Extracted submitted: {date_submitted_str}")
 
     LOG.info("========================")
+    LOG.info("STAGE 03c2: Extract PDF link")
+    LOG.info("========================")
+
+    # PDF link from <a href="/pdf/XXXX.XXXXX"> in the page body.
+    # We build a full URL by prepending the arXiv base URL.
+    pdf_tag: Tag | None = soup.find("a", href=lambda h: h and "/pdf/" in h)
+    pdf_url: str = "https://arxiv.org" + str(pdf_tag["href"]) if pdf_tag else "unknown"
+    LOG.info(f"Extracted pdf_url: {pdf_url}")
+
+    LOG.info("========================")
+    LOG.info("STAGE 03c3: Extract primary subject code and version count")
+    LOG.info("========================")
+
+    # Primary subject code (e.g. "astro-ph.CO") from <span class="primary-subject">.
+    # The tag text looks like: "Cosmology and Nongalactic Astrophysics (astro-ph.CO)"
+    # We extract the code inside the parentheses.
+    primary_subject_tag: Tag | None = soup.find("span", class_="primary-subject")
+    if primary_subject_tag:
+        ps_text: str = primary_subject_tag.get_text(strip=True)
+        # Extract text inside the last pair of parentheses, e.g. "astro-ph.CO"
+        primary_subject_code: str = (
+            ps_text.split("(")[-1].rstrip(")") if "(" in ps_text else ps_text
+        )
+    else:
+        primary_subject_code = "unknown"
+    LOG.info(f"Extracted primary_subject_code: {primary_subject_code}")
+
+    # Version count from <div class="submission-history">.
+    # Each version appears as a <strong> tag like [v1], [v2], etc.
+    submission_history: Tag | None = soup.find("div", class_="submission-history")
+    version_count: int = (
+        len(submission_history.find_all("strong")) if submission_history else 0
+    )
+    LOG.info(f"Extracted version_count: {version_count}")
+
+    LOG.info("========================")
     LOG.info("STAGE 03d: Extract metadata field arxiv_id from canonical link")
     LOG.info("========================")
 
@@ -271,6 +307,23 @@ def run_transform(
     )
     LOG.info(f"Calculated author count: {author_count}")
 
+    # Calculate derived field: sentence count (split on ". ", "? ", "! ")
+    import re
+
+    sentence_count: int = (
+        len(re.split(r"[.!?]+\s+", abstract.strip())) if abstract != "unknown" else 0
+    )
+    LOG.info(f"Calculated sentence count: {sentence_count}")
+
+    # Calculate derived field: average word length (characters per word, excluding spaces)
+    words = (
+        [w for w in abstract.split() if w.isalpha()] if abstract != "unknown" else []
+    )
+    avg_word_length: float = (
+        round(sum(len(w) for w in words) / len(words), 2) if words else 0.0
+    )
+    LOG.info(f"Calculated avg_word_length: {avg_word_length}")
+
     LOG.info("========================")
     LOG.info("STAGE 03f: Build record and create DataFrame")
     LOG.info("========================")
@@ -280,9 +333,14 @@ def run_transform(
         "title": title,
         "authors": authors,
         "subjects": subjects,
+        "primary_subject_code": primary_subject_code,
         "submitted": date_submitted_str,
+        "version_count": version_count,
+        "pdf_url": pdf_url,
         "abstract": abstract,
         "abstract_word_count": abstract_word_count,
+        "sentence_count": sentence_count,
+        "avg_word_length": avg_word_length,
         "author_count": author_count,
     }
 

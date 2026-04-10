@@ -7,11 +7,11 @@
 # It is used in this project to streamline documentation and provide better support for docstring generation.
 
 [project]
-site_name = "Web Mining and Applied NLP"
+site_name = "nlp-05: Web Documents and HTML Data"
 site_url = "https://vnallam09.github.io/nlp-05/"
 repo_url = "https://github.com/vnallam09/nlp-05/"
 repo_name = "vnallam09/nlp-05"
-site_description = "Web Mining and Applied NLP project documentation"
+site_description = "EVTL pipeline for extracting and transforming arXiv HTML data — Venkat Teja"
 docs_dir = "docs" # source directory for documentation markdown files
 site_dir = "site" # output directory for generated site (ignored by Git; not in repo)
 edit_uri = "edit/main/docs/" # "Edit this page" links (GitHub)
@@ -59,6 +59,4 @@ features = [
 
 nav = [
     { "Home" = "index.md" },
-    { "Glossary" = "glossary.md" },
-    { "Project Instructions" = "project-instructions.md" },
 ]

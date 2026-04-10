@@ -1,9 +1,9 @@
 """
-src/nlp/config_case.py - Module 5 Configuration
-(COPY AND MODIFY THIS FILE - do not edit the original)
+src/nlp/config_teja.py - Module 5 Configuration
 
 Stores configuration values for the web document EVTL pipeline.
-Source: arXiv abstract page for "Agents of Chaos" (2602.20021)
+Source: arXiv abstract page for "Disentangling cosmic distance tensions
+with early and late dark energy" (2604.08530)
 
 Purpose
 
@@ -13,18 +13,6 @@ Analytical Questions
 
 - What web page URL should be used as the data source?
 - Where should raw and processed data be stored?
-
-Notes
-
-Following our process, do NOT edit this _case file directly,
-keep it as a working example.
-
-In your custom project,copy this _case.py file and
-append with _yourname.py instead.
-
-Then edit your copied Python file to change:
-- PAGE_URL (source of the HTML web page document),
-- customize your output file name.
 """
 
 from pathlib import Path
